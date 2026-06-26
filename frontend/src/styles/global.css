@@ -125,3 +125,53 @@ body {
 .df-toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
 .df-spacer { flex: 1; }
 a { color: var(--accent); }
+
+/* ---- Branded document header (per department) ---- */
+.df-doc-header {
+  display: flex; align-items: center; gap: 16px;
+  background: white; border: 1px solid #e2e8f0; border-top: 4px solid var(--accent);
+  border-radius: 12px 12px 0 0; padding: 18px 20px; margin-bottom: 0;
+}
+.df-doc-seal {
+  font-size: 40px; line-height: 1; width: 64px; height: 64px; flex: 0 0 64px;
+  display: flex; align-items: center; justify-content: center;
+  background: #eef2ff; border-radius: 12px;
+}
+.df-doc-headings { flex: 1; }
+.df-doc-dept { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.df-doc-title { font-size: 22px; margin: 2px 0 4px; color: #0f172a; }
+.df-doc-sub { font-size: 13px; color: #64748b; }
+.df-doc-meta { text-align: right; font-size: 12px; color: #64748b; }
+.df-document { border-radius: 0 0 12px 12px; border-top: none; }
+
+/* ---- Locked (fetched-from-record) fields ---- */
+.df-badge.lock { background: #fef3c7; color: #92400e; }
+.df-locked .df-input,
+.df-locked select.df-input { background: #f8fafc; color: #334155; border-style: dashed; cursor: not-allowed; }
+
+/* ---- Print helpers ---- */
+.df-print-only { display: none; }
+.df-doc-signature { margin-top: 28px; gap: 48px; font-size: 13px; color: #334155; }
+.df-sig-line { display: inline-block; width: 220px; border-bottom: 1px solid #0f172a; margin-right: 8px; height: 18px; vertical-align: bottom; }
+.df-sig-line.short { width: 120px; }
+
+@media print {
+  @page { margin: 16mm; }
+  body { background: white; }
+  .df-sidebar, .df-no-print { display: none !important; }
+  .df-main { padding: 0; }
+  .df-print-only { display: flex; }
+  .df-doc-signature { display: flex; }
+  .df-printable { break-inside: avoid; }
+  .df-doc-header, .df-document { border: none; border-radius: 0; box-shadow: none; }
+  .df-doc-header { border-bottom: 2px solid #0f172a; }
+  .df-document { padding: 0; }
+  /* Render inputs as clean document values, not editable boxes. */
+  .df-input, select.df-input {
+    border: none; border-bottom: 1px solid #cbd5e1; border-radius: 0; padding: 2px 0;
+    color: #0f172a !important; -webkit-text-fill-color: #0f172a; background: transparent !important;
+    appearance: none; -webkit-appearance: none;
+  }
+  .df-field { break-inside: avoid; }
+  .df-section { break-after: avoid; }
+}

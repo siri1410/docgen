@@ -1,11 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../api/client';
-import type { Submission, SubmissionSummary } from '../types';
+import type { DocumentFormat, Submission, SubmissionSummary } from '../types';
 
 // Lists submissions for a template and shows a selected submission's values
 // (sensitive fields arrive already masked from the backend unless authorized).
 export function SubmissionViewer({ submissions }: { submissions: SubmissionSummary[] }) {
   const [selected, setSelected] = useState<Submission | null>(null);
+  const [docFormats, setDocFormats] = useState<DocumentFormat[]>([]);
+
+  useEffect(() => {
+    api.documentFormats().then(setDocFormats).catch(() => setDocFormats([]));
+  }, []);
 
   const open = async (id: string) => setSelected(await api.getSubmission(id));
 
@@ -35,6 +40,15 @@ export function SubmissionViewer({ submissions }: { submissions: SubmissionSumma
       {selected && (
         <div className="df-card" style={{ flex: 1 }}>
           <h3 style={{ marginTop: 0 }}>Submission {selected.id.slice(0, 8)}…</h3>
+          <div className="df-row" style={{ marginBottom: 12, alignItems: 'center' }}>
+            <span className="df-muted">Download:</span>
+            {docFormats.map((f) => (
+              <button key={f.format} className="df-btn secondary"
+                onClick={() => api.downloadDocument(selected.id, f.format)}>
+                ⬇ {f.label}
+              </button>
+            ))}
+          </div>
           <table className="df-table">
             <thead><tr><th>Field</th><th>Value</th></tr></thead>
             <tbody>

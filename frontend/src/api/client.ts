@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type {
-  Connector, FieldMapping, FieldType, FieldTypeInfo, PrefillResult,
+  Connector, DocumentFormat, FieldMapping, FieldType, FieldTypeInfo, PrefillResult,
   Submission, SubmissionSummary, Template, TemplateSummary, TemplateVersion,
 } from '../types';
 
@@ -91,4 +91,22 @@ export const api = {
   listSubmissions: (templateId: string) =>
     http.get<SubmissionSummary[]>(`/forms/${templateId}/submissions`).then((r) => r.data),
   getSubmission: (id: string) => http.get<Submission>(`/submissions/${id}`).then((r) => r.data),
+
+  // Server-side document generation (PDF / Word / RTF) via the DocumentGenerator extension point.
+  documentFormats: () => http.get<DocumentFormat[]>('/documents/formats').then((r) => r.data),
+  downloadDocument: async (submissionId: string, format: string) => {
+    const res = await http.get(`/submissions/${submissionId}/document`, {
+      params: { format }, responseType: 'blob',
+    });
+    const cd = String(res.headers['content-disposition'] ?? '');
+    const filename = /filename="?([^"]+)"?/.exec(cd)?.[1] ?? `form-${submissionId.slice(0, 8)}.${format}`;
+    const url = URL.createObjectURL(res.data as Blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  },
 };
