@@ -1,0 +1,47 @@
+{
+  "name": "Patient Intake Form",
+  "slug": "patient-intake",
+  "category": "INTAKE",
+  "description": "Collects member demographics and contact details for intake.",
+  "schema": {
+    "title": "Patient Intake",
+    "sections": ["Personal", "Contact", "Address"]
+  },
+  "layout": { "columns": 2 },
+  "validation": {
+    "rules": [
+      { "field": "addressZip", "pattern": "^[0-9]{5}(-[0-9]{4})?$", "message": "Invalid ZIP" }
+    ]
+  },
+  "roleAccess": {
+    "view": ["VIEWER", "EDITOR", "ADMIN"],
+    "edit": ["EDITOR", "ADMIN"]
+  },
+  "fields": [
+    { "fieldKey": "sectionPersonal", "label": "Personal Information", "type": "SECTION_HEADER", "required": false },
+    { "fieldKey": "firstName", "label": "First Name", "type": "TEXT", "required": true,
+      "config": { "placeholder": "John", "maxLength": 80 } },
+    { "fieldKey": "lastName", "label": "Last Name", "type": "TEXT", "required": true },
+    { "fieldKey": "dob", "label": "Date of Birth", "type": "DATE", "required": true },
+    { "fieldKey": "ssn", "label": "SSN", "type": "SSN", "required": true, "config": { "mask": true } },
+    { "fieldKey": "mpi", "label": "Member ID (MPI)", "type": "MPI", "required": true, "config": { "mask": true } },
+    { "fieldKey": "sectionContact", "label": "Contact", "type": "SECTION_HEADER", "required": false },
+    { "fieldKey": "email", "label": "Email", "type": "EMAIL", "required": true,
+      "config": { "placeholder": "john@example.com" } },
+    { "fieldKey": "phone", "label": "Phone", "type": "PHONE", "required": false },
+    { "fieldKey": "addressLine1", "label": "Address Line 1", "type": "TEXT", "required": false },
+    { "fieldKey": "addressCity", "label": "City", "type": "TEXT", "required": false },
+    { "fieldKey": "addressState", "label": "State", "type": "DROPDOWN", "required": false,
+      "options": [
+        { "value": "NC", "label": "North Carolina" },
+        { "value": "SC", "label": "South Carolina" },
+        { "value": "VA", "label": "Virginia" }
+      ] },
+    { "fieldKey": "addressZip", "label": "ZIP", "type": "TEXT", "required": false,
+      "config": { "pattern": "^[0-9]{5}(-[0-9]{4})?$" } },
+    { "fieldKey": "spouseName", "label": "Spouse Name", "type": "TEXT", "required": false,
+      "config": { "visibleWhen": { "field": "maritalStatus", "operator": "eq", "value": "married" } } },
+    { "fieldKey": "consent", "label": "I consent to treatment", "type": "CHECKBOX", "required": true,
+      "options": [ { "value": "yes", "label": "Yes, I consent" } ] }
+  ]
+}

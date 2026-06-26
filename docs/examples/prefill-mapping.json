@@ -1,0 +1,31 @@
+{
+  "connector": {
+    "name": "Member Directory API",
+    "baseUrl": "https://api.example.com/members/{{memberId}}",
+    "httpMethod": "GET",
+    "authType": "BEARER",
+    "headers": { "Accept": "application/json" },
+    "queryParams": {},
+    "requestBodyTemplate": null,
+    "secret": { "token": "REPLACE_ME" }
+  },
+  "exampleApiResponse": {
+    "member": {
+      "firstName": "John",
+      "lastName": "Smith",
+      "ssn": "123-45-6789",
+      "mpi": "MPI12345",
+      "address": { "line1": "100 Main St", "city": "Raleigh", "state": "NC", "zip": "27601" }
+    }
+  },
+  "mappings": [
+    { "source": "$.member.firstName", "target": "firstName", "transform": "capitalize", "required": true, "fallbackValue": "John" },
+    { "source": "$.member.lastName", "target": "lastName", "transform": "capitalize", "required": true, "fallbackValue": "Smith" },
+    { "source": "$.member.ssn", "target": "ssn", "required": false, "fallbackValue": "123-45-6789" },
+    { "source": "$.member.mpi", "target": "mpi", "transform": "upper", "required": false, "fallbackValue": "MPI12345" },
+    { "source": "$.member.address.line1", "target": "addressLine1", "required": false, "fallbackValue": "100 Main St" },
+    { "source": "$.member.address.city", "target": "addressCity", "transform": "titleCase", "required": false, "fallbackValue": "Raleigh" },
+    { "source": "$.member.address.state", "target": "addressState", "transform": "upper", "required": false, "fallbackValue": "NC" },
+    { "source": "$.member.address.zip", "target": "addressZip", "required": false, "fallbackValue": "27601" }
+  ]
+}
