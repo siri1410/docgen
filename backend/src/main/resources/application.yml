@@ -1,0 +1,70 @@
+spring:
+  application:
+    name: docgen
+  profiles:
+    # 'dev' = permissive security so the demo flows without a login wall.
+    # Switch to 'prod' to enforce authentication + role-based access.
+    active: ${DOCGEN_PROFILE:dev}
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/docgen}
+    username: ${DB_USERNAME:docgen}
+    password: ${DB_PASSWORD:docgen}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+  data:
+    redis:
+      # Redis is optional. If unreachable, prefill rate limiting falls back to an in-memory limiter.
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 500ms
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+  health:
+    # Redis is optional — don't let a missing Redis fail the overall health check.
+    redis:
+      enabled: ${REDIS_HEALTH:false}
+
+docgen:
+  security:
+    jwt:
+      # Override in real deployments. Base64-encoded 256-bit HMAC secret.
+      secret: ${JWT_SECRET:ZG9jZ2VuLWRldi1zZWNyZXQta2V5LWNoYW5nZS1tZS1pbi1wcm9kdWN0aW9uLTEyMzQ1Ng==}
+      expiration-minutes: ${JWT_EXP_MINUTES:480}
+  crypto:
+    # AES-256 key (Base64, 32 bytes) used to encrypt connector secrets and sensitive values at rest.
+    aes-key: ${DOCGEN_AES_KEY:MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=}
+  prefill:
+    rate-limit:
+      capacity: ${PREFILL_RL_CAPACITY:30}
+      refill-per-minute: ${PREFILL_RL_REFILL:30}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+logging:
+  level:
+    com.docgen: INFO
