@@ -10,7 +10,7 @@ export function FormPreviewPage() {
 
   return (
     <div>
-      <div className="df-toolbar">
+      <div className="df-toolbar df-no-print">
         <Link to={`/templates/${id}/build`} className="df-btn ghost">← Builder</Link>
         <h2 style={{ margin: 0 }}>Preview · {template.name}</h2>
       </div>

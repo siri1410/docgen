@@ -121,3 +121,10 @@ export interface FieldTypeInfo {
   optionBacked: boolean;
   presentational: boolean;
 }
+
+export interface DocumentFormat {
+  format: string;
+  label: string;
+  contentType: string;
+  extension: string;
+}
